@@ -8,36 +8,36 @@ public final class FridaServerChecker {
     private FridaServerChecker() {
     }
 
-    public static FridaServerStatus check(String adbPath, String deviceId) {
+    public static FridaServerStatus check(String adbPath, String deviceId, String frida_server_name) {
         boolean running = false;
         boolean present = false;
         StringBuilder details = new StringBuilder();
         try {
-            ProcessResult pidof = AdbUtil.shell(adbPath, deviceId, "pidof frida-server");
+            ProcessResult pidof = AdbUtil.shell(adbPath, deviceId, "pidof " + frida_server_name);
             if (pidof.getExitCode() == 0 && !pidof.getStdout().trim().isEmpty()) {
                 running = true;
                 details.append("frida-server pid: ").append(pidof.getStdout().trim()).append('\n');
             }
             if (!running) {
-                ProcessResult ps = AdbUtil.shell(adbPath, deviceId, "ps | grep frida-server");
+                ProcessResult ps = AdbUtil.shell(adbPath, deviceId, "ps | grep " + frida_server_name);
                 if (ps.getExitCode() == 0 && !ps.getStdout().trim().isEmpty()) {
                     running = true;
                     details.append("frida-server process: ").append(ps.getStdout().trim()).append('\n');
                 }
             }
-            ProcessResult lsExact = AdbUtil.shell(adbPath, deviceId, "ls /data/local/tmp/frida-server");
+            ProcessResult lsExact = AdbUtil.shell(adbPath, deviceId, "ls /data/local/tmp/" + frida_server_name);
             if (lsExact.getExitCode() == 0 && !lsExact.getStdout().trim().isEmpty()) {
                 present = true;
             }
             if (!present) {
-                ProcessResult lsAny = AdbUtil.shell(adbPath, deviceId, "ls /data/local/tmp | grep -E '^frida-server'");
+                ProcessResult lsAny = AdbUtil.shell(adbPath, deviceId, "ls /data/local/tmp | grep -E " + "'^" + frida_server_name + "'");
                 if (lsAny.getExitCode() == 0 && !lsAny.getStdout().trim().isEmpty()) {
                     present = true;
                     details.append("frida-server variants: ").append(lsAny.getStdout().trim()).append('\n');
                 }
             }
             if (!present) {
-                details.append("frida-server not found in /data/local/tmp (expected frida-server*).\n");
+                details.append("frida-server not found in /data/local/tmp (expected " + frida_server_name + "*).\n");
             }
         } catch (Exception e) {
             details.append("Failed to query device: ").append(e.getMessage());
