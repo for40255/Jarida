@@ -12,6 +12,7 @@ public class FridaSessionConfig {
     private String extraFridaArgs = "";
     private String fridaPath = "frida";
     private String fridaPsPath = "frida-ps";
+    private String fridaServerFileName = "frida-server";
     private String adbPath = "adb";
 
     public DeviceMode getDeviceMode() {
@@ -102,6 +103,14 @@ public class FridaSessionConfig {
         this.fridaPsPath = fridaPsPath;
     }
 
+    public String getFridaServerFileName() {
+        return fridaServerFileName;
+    }
+
+    public void setFridaServerFileName(String fridaServerFileName) {
+        this.fridaServerFileName = fridaServerFileName;
+    }
+
     public String getAdbPath() {
         return adbPath;
     }
@@ -123,6 +132,7 @@ public class FridaSessionConfig {
         cfg.setExtraFridaArgs(extraFridaArgs);
         cfg.setFridaPath(fridaPath);
         cfg.setFridaPsPath(fridaPsPath);
+        cfg.setFridaServerFileName(fridaServerFileName);
         cfg.setAdbPath(adbPath);
         return cfg;
     }
