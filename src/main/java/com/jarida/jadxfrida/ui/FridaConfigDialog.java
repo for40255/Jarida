@@ -747,7 +747,6 @@ public class FridaConfigDialog extends JDialog {
         return "";
     }
 
-
     public boolean isTemplateAppend() {
         return templateAppend.isSelected();
     }
