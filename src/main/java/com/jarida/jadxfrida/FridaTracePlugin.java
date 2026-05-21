@@ -688,6 +688,7 @@ public class FridaTracePlugin implements JadxPlugin {
         String adb = cfg.getAdbPath();
         String frida = cfg.getFridaPath();
         String fridaPs = cfg.getFridaPsPath();
+        String fridaServerFile = cfg.getFridaServerFileName();
         try {
             if (adb != null && !adb.trim().isEmpty()) {
                 PREFS.put("path.adb", adb.trim());
@@ -700,6 +701,10 @@ public class FridaTracePlugin implements JadxPlugin {
             if (fridaPs != null && !fridaPs.trim().isEmpty()) {
                 PREFS.put("path.fridaPs", fridaPs.trim());
                 lastSessionConfig.setFridaPsPath(fridaPs.trim());
+            }
+            if (fridaServerFile != null && !fridaServerFile.trim().isEmpty()) {
+                PREFS.put("path.fridaServerFile", fridaServerFile.trim());
+                lastSessionConfig.setFridaServerFileName(fridaServerFile.trim());
             }
         } catch (Exception ignored) {
         }
