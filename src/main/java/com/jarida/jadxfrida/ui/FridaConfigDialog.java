@@ -59,6 +59,7 @@ public class FridaConfigDialog extends JDialog {
     private final JTextField adbPath;
     private final JTextField fridaPath;
     private final JTextField fridaPsPath;
+    private final JTextField fridaServerFileName;
 
     private final JCheckBox logArgs;
     private final JCheckBox logReturn;
@@ -117,6 +118,7 @@ public class FridaConfigDialog extends JDialog {
         adbPath = new JTextField("adb", 30);
         fridaPath = new JTextField("frida", 30);
         fridaPsPath = new JTextField("frida-ps", 30);
+        fridaServerFileName = new JTextField("frida-server", 30);
         logArgs = new JCheckBox("Log args", true);
         logReturn = new JCheckBox("Log return", true);
         logThread = new JCheckBox("Log thread name", true);
@@ -202,6 +204,7 @@ public class FridaConfigDialog extends JDialog {
             adbPath.setText(config.getAdbPath());
             fridaPath.setText(config.getFridaPath());
             fridaPsPath.setText(config.getFridaPsPath());
+            fridaServerFileName.setText(config.getFridaServerFileName());
         }
         if (options != null) {
             logArgs.setSelected(options.isLogArgs());
@@ -394,6 +397,18 @@ public class FridaConfigDialog extends JDialog {
         c.gridwidth = 3;
         c.fill = GridBagConstraints.HORIZONTAL;
         panel.add(fridaPsPath, c);
+        c.gridwidth = 1;
+
+        c.gridx = 0;
+        c.gridy++;
+        c.weightx = 0;
+        c.fill = GridBagConstraints.NONE;
+        panel.add(new JLabel("Frida server file name:"), c);
+        c.gridx = 1;
+        c.weightx = 1;
+        c.gridwidth = 3;
+        c.fill = GridBagConstraints.HORIZONTAL;
+        panel.add(fridaServerFileName, c);
         c.gridwidth = 1;
 
         JButton checkBtn = new JButton("Check connectivity");
@@ -685,7 +700,11 @@ public class FridaConfigDialog extends JDialog {
                 if (dev == null) {
                     sb.append("No USB device selected.\n");
                 } else {
-                    FridaServerStatus status = FridaServerChecker.check(adbPath.getText().trim(), dev.getId());
+                    String fridaServerFile = fridaServerFileName.getText().trim();
+                    if (fridaServerFile.isEmpty()) {
+                        fridaServerFile = "frida-server";
+                    }
+                    FridaServerStatus status = FridaServerChecker.check(adbPath.getText().trim(), dev.getId(), fridaServerFile);
                     sb.append("frida-server present: ").append(status.isPresent()).append("\n");
                     sb.append("frida-server running: ").append(status.isRunning()).append("\n");
                     if (!status.getDetails().isEmpty()) {
