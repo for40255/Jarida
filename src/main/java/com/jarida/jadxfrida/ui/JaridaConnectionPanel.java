@@ -45,6 +45,7 @@ public class JaridaConnectionPanel extends JPanel {
     private final JTextField adbPath;
     private final JTextField fridaPath;
     private final JTextField fridaPsPath;
+    private final JTextField fridaServerFileName;
     private final JTextArea statusArea;
     private final JButton stopButton;
     private final JLabel statusLabel;
@@ -87,6 +88,7 @@ public class JaridaConnectionPanel extends JPanel {
         adbPath = new JTextField("adb", 30);
         fridaPath = new JTextField("frida", 30);
         fridaPsPath = new JTextField("frida-ps", 30);
+        fridaServerFileName = new JTextField("frida-server", 30);
 
         statusArea = new JTextArea(4, 60);
         statusArea.setEditable(false);
@@ -159,6 +161,7 @@ public class JaridaConnectionPanel extends JPanel {
             adbPath.setText(config.getAdbPath());
             fridaPath.setText(config.getFridaPath());
             fridaPsPath.setText(config.getFridaPsPath());
+            fridaServerFileName.setText(config.getFridaServerFileName());
         } else if (defaultPackage != null && !defaultPackage.trim().isEmpty()) {
             targetPackage.setText(defaultPackage);
         }
@@ -340,6 +343,18 @@ public class JaridaConnectionPanel extends JPanel {
         panel.add(fridaPsPath, c);
         c.gridwidth = 1;
 
+        c.gridx = 0;
+        c.gridy++;
+        c.weightx = 0;
+        c.fill = GridBagConstraints.NONE;
+        panel.add(new JLabel("Frida server file name:"), c);
+        c.gridx = 1;
+        c.weightx = 1;
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        c.fill = GridBagConstraints.HORIZONTAL;
+        panel.add(fridaServerFileName, c);
+        c.gridwidth = 1;
+
         JButton checkBtn = new JButton("Check connectivity");
         checkBtn.addActionListener(e -> {
             checkBtn.setEnabled(false);
@@ -409,6 +424,7 @@ public class JaridaConnectionPanel extends JPanel {
         cfg.setAdbPath(adbPath.getText().trim());
         cfg.setFridaPath(fridaPath.getText().trim());
         cfg.setFridaPsPath(fridaPsPath.getText().trim());
+        cfg.setFridaServerFileName(fridaServerFileName.getText().trim());
         if (onSavePaths != null) {
             onSavePaths.accept(cfg);
         }
@@ -457,6 +473,7 @@ public class JaridaConnectionPanel extends JPanel {
         cfg.setAdbPath(adbPath.getText().trim());
         cfg.setFridaPath(fridaPath.getText().trim());
         cfg.setFridaPsPath(fridaPsPath.getText().trim());
+        cfg.setFridaServerFileName(fridaServerFileName.getText().trim());
         if (cfg.getTargetPackage().isEmpty() && cfg.isSpawn()) {
             JOptionPane.showMessageDialog(this, "Target package is required for spawn", "Missing data", JOptionPane.ERROR_MESSAGE);
             return null;
@@ -683,7 +700,11 @@ public class JaridaConnectionPanel extends JPanel {
                 if (dev == null) {
                     sb.append("No USB device selected.\n");
                 } else {
-                    FridaServerStatus status = FridaServerChecker.check(adbPath.getText().trim(), dev.getId());
+                    String fridaServerFile = fridaServerFileName.getText().trim();
+                    if (fridaServerFile.isEmpty()) {
+                        fridaServerFile = "frida-server";
+                    }
+                    FridaServerStatus status = FridaServerChecker.check(adbPath.getText().trim(), dev.getId(), fridaServerFile);
                     sb.append("frida-server present: ").append(status.isPresent()).append("\n");
                     sb.append("frida-server running: ").append(status.isRunning()).append("\n");
                     if (!status.getDetails().isEmpty()) {
