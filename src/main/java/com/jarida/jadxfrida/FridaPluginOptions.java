@@ -26,6 +26,7 @@ public class FridaPluginOptions extends BasePluginOptionsBuilder {
     private static final String DEFAULT_EXTRA_ARGS = "";
     private static final String DEFAULT_FRIDA_PATH = "frida";
     private static final String DEFAULT_FRIDA_PS_PATH = "frida-ps";
+    private static final String DEFAULT_FRIDA_SERVER_FILE_NAME = "frida-server";
     private static final String DEFAULT_ADB_PATH = "adb";
     private static final boolean DEFAULT_LOG_ARGS = true;
     private static final boolean DEFAULT_LOG_RETURN = true;
@@ -47,6 +48,7 @@ public class FridaPluginOptions extends BasePluginOptionsBuilder {
     private String extraArgs = DEFAULT_EXTRA_ARGS;
     private String fridaPath = DEFAULT_FRIDA_PATH;
     private String fridaPsPath = DEFAULT_FRIDA_PS_PATH;
+    private String fridaServerFileName = DEFAULT_FRIDA_SERVER_FILE_NAME;
     private String adbPath = DEFAULT_ADB_PATH;
 
     private boolean logArgs = DEFAULT_LOG_ARGS;
@@ -113,6 +115,10 @@ public class FridaPluginOptions extends BasePluginOptionsBuilder {
                 .description("Path to frida-ps executable")
                 .defaultValue(DEFAULT_FRIDA_PS_PATH)
                 .setter(v -> fridaPsPath = v);
+        hidden(strOption(PREFIX + "fridaServerFileName"))
+                .description("Path to frida-server executable")
+                .defaultValue(DEFAULT_FRIDA_SERVER_FILE_NAME)
+                .setter(v -> fridaServerFileName = v);
         hidden(strOption(PREFIX + "adbPath"))
                 .description("Path to adb executable")
                 .defaultValue(DEFAULT_ADB_PATH)
@@ -175,6 +181,7 @@ public class FridaPluginOptions extends BasePluginOptionsBuilder {
         cfg.setExtraFridaArgs(extraArgs);
         cfg.setFridaPath(fridaPath);
         cfg.setFridaPsPath(fridaPsPath);
+        cfg.setFridaServerFileName(fridaServerFileName);
         cfg.setAdbPath(adbPath);
         return cfg;
     }
@@ -205,6 +212,7 @@ public class FridaPluginOptions extends BasePluginOptionsBuilder {
             extraArgs = cfg.getExtraFridaArgs();
             fridaPath = cfg.getFridaPath();
             fridaPsPath = cfg.getFridaPsPath();
+            fridaServerFileName = cfg.getFridaServerFileName();
             adbPath = cfg.getAdbPath();
         }
         if (opt != null) {
